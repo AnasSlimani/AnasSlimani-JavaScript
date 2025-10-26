@@ -1,0 +1,15 @@
+{
+  "name": "poke-duel-cli",
+  "version": "1.0.0",
+  "description": "CLI mini-game using PokeAPI: player vs bot",
+  "type": "module",
+  "bin": {
+    "pokemon": "./index.js"
+  },
+  "scripts": {
+    "start": "node index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
