@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Reading Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="app.js" type="module" defer></script>
+    <style>
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .animate-slideDown {
+            animation: slideDown 0.7s ease-out forwards;
+        }
+        
+        .animate-fadeInUp {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+        
+        .animate-popIn {
+            animation: popIn 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+        
+        .dark-gradient {
+            background: linear-gradient(165deg, #1e293b 0%, #334155 50%, #475569 100%);
+        }
+        
+        .accent-gradient {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        }
+        
+        .card-glass {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .form-glass {
+            background: rgba(255, 255, 255, 0.98);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        .hover-lift {
+            transition: all 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+        
+        .stat-shimmer {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-shimmer::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: shimmer 3s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { right: -100%; }
+            100% { right: 100%; }
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+        }
+
+        .nav-accent {
+            position: relative;
+        }
+
+        .nav-accent::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, #f59e0b, #d97706);
+            border-radius: 0 4px 4px 0;
+        }
+    </style>
+</head>
+<body class="dark-gradient min-h-screen">
+
+    
+    <nav class="card-glass border-b border-white/10 sticky top-0 z-50 animate-slideDown">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 accent-gradient rounded-lg flex items-center justify-center">
+                        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                    </div>
+                    <h1 class="text-2xl font-bold text-white">BookVault</h1>
+                </div>
+                <div class="text-amber-400 font-semibold">Reading Tracker</div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-6 py-8">
+        
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 animate-popIn">
+            <div class="card-glass p-8 rounded-3xl hover-lift stat-shimmer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-300 text-sm font-medium mb-2">Completed Books</p>
+                        <p class="text-5xl font-bold text-white" id="totalBooksFinished">0</p>
+                    </div>
+                    <div class="w-16 h-16 accent-gradient rounded-2xl flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-glass p-8 rounded-3xl hover-lift stat-shimmer">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-gray-300 text-sm font-medium mb-2">Pages Read</p>
+                        <p class="text-5xl font-bold text-white" id="totalPagesRead">0</p>
+                    </div>
+                    <div class="w-16 h-16 accent-gradient rounded-2xl flex items-center justify-center">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+          
+            <div class="lg:col-span-2 animate-fadeInUp">
+                <div class="flex items-center justify-between mb-6">
+                    <h2 class="text-3xl font-bold text-white flex items-center">
+                        <span class="w-2 h-8 accent-gradient rounded-full mr-3"></span>
+                        Library Collection
+                    </h2>
+                </div>
+                
+                <div id="bookListContainer" class="space-y-4">
+                    <div id="emptyMessage" class="card-glass p-16 rounded-3xl text-center">
+                        <div class="w-24 h-24 accent-gradient rounded-full flex items-center justify-center mx-auto mb-6 opacity-80">
+                            <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                            </svg>
+                        </div>
+                        <p class="text-white text-xl font-semibold mb-2">No Books Yet</p>
+                        <p class="text-gray-400">Start building your digital library by adding your first book</p>
+                    </div>
+                </div>
+            </div>
+
+           
+            <div class="lg:col-span-1 animate-fadeInUp" style="animation-delay: 0.2s;">
+                <div class="form-glass p-8 rounded-3xl shadow-2xl sticky top-24">
+                    <div class="nav-accent pl-4 mb-6">
+                        <h2 class="text-2xl font-bold text-gray-800">Add New Book</h2>
+                        <p class="text-sm text-gray-600 mt-1">Expand your collection</p>
+                    </div>
+                    
+                    <form id="addBookForm" class="space-y-5">
+                        <div>
+                            <label for="title" class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Book Title</label>
+                            <input type="text" id="title" name="title" required 
+                                class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm focus:border-amber-500 transition-all">
+                        </div>
+
+                        <div>
+                            <label for="author" class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Author Name</label>
+                            <input type="text" id="author" name="author" required 
+                                class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm focus:border-amber-500 transition-all">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="numberOfPages" class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Pages</label>
+                                <input type="number" id="numberOfPages" name="numberOfPages" required min="1" 
+                                    class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm focus:border-amber-500 transition-all">
+                            </div>
+                            <div>
+                                <label for="pagesRead" class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Read</label>
+                                <input type="number" id="pagesRead" name="pagesRead" required min="0" value="0" 
+                                    class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm focus:border-amber-500 transition-all">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label for="status" class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Reading Status</label>
+                            <select id="status" name="status" 
+                                class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm focus:border-amber-500 transition-all">
+                                <option>Want to read</option>
+                                <option>Currently reading</option>
+                                <option>Read</option>
+                                <option>Re-read</option>
+                                <option>DNF</option>
+                                <option>Returned Unread</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="format" class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Book Format</label>
+                            <select id="format" name="format" 
+                                class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm focus:border-amber-500 transition-all">
+                                <option>Print</option>
+                                <option>Ebook</option>
+                                <option>PDF</option>
+                                <option>AudioBook</option>
+                            </select>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <label for="price" class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Price</label>
+                                <input type="number" id="price" name="price" min="0" step="0.01" value="0" 
+                                    class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm focus:border-amber-500 transition-all">
+                            </div>
+                            <div>
+                                <label for="suggestedBy" class="block text-xs font-bold text-gray-700 mb-2 uppercase tracking-wide">Source</label>
+                                <input type="text" id="suggestedBy" name="suggestedBy" 
+                                    class="w-full rounded-xl border-2 border-gray-200 px-4 py-3 text-sm focus:border-amber-500 transition-all">
+                            </div>
+                        </div>
+
+                        <button type="submit" 
+                            class="w-full accent-gradient text-white font-bold py-4 px-6 rounded-xl shadow-lg hover:shadow-2xl transform hover:scale-105 transition-all duration-200 mt-6">
+                            Add to Library
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

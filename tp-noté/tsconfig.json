@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    
+    "rootDir": "./src",   /* Specify the root directory of source files. */
+    "outDir": "./public"  /* Redirect output structure to the directory. */
+  },
+  "include": ["src/**/*.ts"] /* Only compile files in the 'src' folder */
+}
